@@ -13,9 +13,11 @@ class Espresso(QMainWindow):
         self.connection = sqlite3.connect("coffee.sqlite")
         self.cursor = self.connection.cursor()
         self.tableWidget.cellChanged.connect(self.cell_changed)
+        self.addButton.clicked.connect(self.adding)
         self.load_table()
 
     def load_table(self):
+        self.tableWidget.clear()
         data = self.cursor.execute("SELECT * FROM coffee").fetchall()
         self.tableWidget.setColumnCount(7)
         self.tableWidget.setRowCount(0)
@@ -29,7 +31,6 @@ class Espresso(QMainWindow):
             ['ID', 'Название', 'Степень обжарки', 'Молотый/в зернах', 'Описание', 'Цена', 'Объем упаковки'])
         self.tableWidget.resizeColumnsToContents()
 
-
     def cell_changed(self, row, column):
         col = d_[column]
         text = self.tableWidget.item(row, column).text()
@@ -37,6 +38,33 @@ class Espresso(QMainWindow):
         query = f"UPDATE coffee SET {col} = '{text}' WHERE id = {id}"
         self.cursor.execute(query)
         self.connection.commit()
+
+    def adding(self):
+        self.widget = AddWidget(self)
+        self.widget.show()
+
+
+class AddWidget(QMainWindow):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        uic.loadUi("addEditCoffeeForm.ui", self)
+        self.connection = sqlite3.connect("coffee.sqlite")
+        self.cursor = self.connection.cursor()
+        self.addButtonFromForm.clicked.connect(self.add_from_form)
+
+    def add_from_form(self):
+        id = int(self.id_input.text())
+        name = self.name_input.text()
+        degree = self.degree_input.text()
+        type = self.type_input.text()
+        description = self.description_input.text()
+        price = self.price_input.text()
+        volume = self.volume_input.text()
+        query = "INSERT INTO coffee VALUES (?, ?, ?, ?, ?, ?, ?)"
+        self.cursor.execute(query, (id, name, degree, type, description, price, volume))
+        self.connection.commit()
+        self.parent().load_table()
+        self.close()
 
 
 if __name__ == '__main__':
