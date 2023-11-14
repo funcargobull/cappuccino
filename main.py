@@ -9,6 +9,7 @@ class Espresso(QMainWindow):
         super().__init__()
         uic.loadUi('main.ui', self)
         self.connection = sqlite3.connect("coffee.sqlite")
+        self.tableWidget.setHorizontalHeaderLabels(['id', 'name', 'degree', 'type', 'description', 'price', 'volume'])
         self.load_table()
 
     def load_table(self):
