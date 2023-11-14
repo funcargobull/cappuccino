@@ -12,6 +12,7 @@ class Espresso(QMainWindow):
         uic.loadUi('main.ui', self)
         self.connection = sqlite3.connect("coffee.sqlite")
         self.cursor = self.connection.cursor()
+        self.tableWidget.cellChanged.connect(self.cell_changed)
         self.load_table()
 
     def load_table(self):
@@ -27,7 +28,7 @@ class Espresso(QMainWindow):
         self.tableWidget.setHorizontalHeaderLabels(
             ['ID', 'Название', 'Степень обжарки', 'Молотый/в зернах', 'Описание', 'Цена', 'Объем упаковки'])
         self.tableWidget.resizeColumnsToContents()
-        self.tableWidget.cellChanged.connect(self.cell_changed)
+
 
     def cell_changed(self, row, column):
         col = d_[column]
