@@ -21,9 +21,9 @@ class Espresso(QMainWindow):
             for j, elem in enumerate(row):
                 self.tableWidget.setItem(
                     i, j, QTableWidgetItem(str(elem)))
+        self.tableWidget.setHorizontalHeaderLabels(
+            ['ID', 'Название', 'Степень обжарки', 'Молотый/в зернах', 'Описание', 'Цена', 'Объем упаковки'])
         self.tableWidget.resizeColumnsToContents()
-        self.tableWidget.setHorizontalHeaderLabels(['id', 'name', 'degree', 'type', 'description', 'price', 'volume'])
-        self.tableWidget.horizontalHeader().setStretchLastSection(True)
 
 
 if __name__ == '__main__':
